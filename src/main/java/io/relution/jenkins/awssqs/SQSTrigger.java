@@ -49,6 +49,7 @@ import net.sf.json.JSONObject;
 import org.apache.commons.jelly.XMLOutput;
 import org.apache.commons.lang3.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 
@@ -375,8 +376,7 @@ public class SQSTrigger extends Trigger<Job<?, ?>> implements io.relution.jenkin
         public boolean configure(final StaplerRequest req, final JSONObject json) throws FormException {
             final Object sqsQueues = json.get(KEY_SQS_QUEUES);
 
-            this.sqsQueues = req.bindJSONToList(io.relution.jenkins.awssqs.SQSTriggerQueue.class, sqsQueues);
-            this.initQueueMap();
+            this.setSqsQueues(req.bindJSONToList(io.relution.jenkins.awssqs.SQSTriggerQueue.class, sqsQueues));
             this.save();
 
             EventBroker.getInstance().post(new ConfigurationChangedEvent());
@@ -391,6 +391,12 @@ public class SQSTrigger extends Trigger<Job<?, ?>> implements io.relution.jenkin
                 return Collections.emptyList();
             }
             return this.sqsQueues;
+        }
+
+        @DataBoundSetter
+        public void setSqsQueues(List<io.relution.jenkins.awssqs.SQSTriggerQueue> sqsQueues) {
+            this.sqsQueues = sqsQueues;
+            this.initQueueMap();
         }
 
         public SQSQueue getSqsQueue(final String uuid) {

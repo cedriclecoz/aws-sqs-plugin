@@ -530,7 +530,7 @@ public class SQSTriggerQueue extends AbstractDescribableImpl<SQSTriggerQueue> im
 
                 final String url = result.getQueueUrl();
                 if ((credentialsId == null) || credentialsId.isEmpty())    {
-                    return FormValidation.error("No credentials set");
+                    return FormValidation.ok("Access to %s successful\n(%s)", queue.getName(), url);
                 } else {
                     return FormValidation.ok("Access to %s successful\n(%s),\ncredentials store ID=(%s)",
                         queue.getName(), url, queue.getCredentialsId());
